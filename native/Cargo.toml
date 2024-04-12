@@ -1,0 +1,12 @@
+[package]
+name = "dioxus-intellij"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+dioxus-autofmt = "0.5.1"
+jni = "0.21.1"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
