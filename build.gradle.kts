@@ -46,3 +46,8 @@ tasks {
         distributionFile.set(file("build/distributions/dioxus-${version}-signed.zip"))
     }
 }
+
+project.afterEvaluate {
+    val publishPlugin = tasks.findByPath("publishPlugin")
+    publishPlugin?.setDependsOn(emptySet<Any>())
+}

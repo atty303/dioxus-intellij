@@ -127,12 +127,17 @@ jobs:
           app-id: ${{ secrets.TOKEN_APP_ID }}
           private-key: ${{ secrets.TOKEN_PRIVATE_KEY }}
 
-      - run: ls -R .
-
       - name: Upload release asset
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
         run: gh release upload ${{ needs.release-please.outputs.tag_name }} build/distributions/dioxus-*-signed.zip
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "17"
+          cache: gradle
 
       - name: Upload to Marketplace
         env:
