@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.7](https://github.com/atty303/dioxus-intellij/compare/v1.1.6...v1.1.7) (2024-04-13)
+
+
+### Bug Fixes
+
+* compatible with 2023.3 ([4c9ed8d](https://github.com/atty303/dioxus-intellij/commit/4c9ed8d5e24515affd072b9a7bf0faa0ca98945a))
+
 ## [1.1.6](https://github.com/atty303/dioxus-intellij/compare/v1.1.5...v1.1.6) (2024-04-13)
 
 
