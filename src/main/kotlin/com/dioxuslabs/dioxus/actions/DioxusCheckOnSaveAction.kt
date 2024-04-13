@@ -22,6 +22,7 @@ import org.rust.cargo.project.settings.rustfmtSettings
 import org.rust.cargo.toolchain.CargoCommandLine
 import org.rust.cargo.toolchain.tools.Cargo
 import org.rust.lang.RsFileType
+import org.rust.openapiext.document
 import org.rust.openapiext.execute
 import org.rust.openapiext.pathAsPath
 import org.rust.openapiext.toPsiFile
@@ -46,8 +47,10 @@ class DioxusCheckOnSaveAction : ActionsOnSaveFileDocumentManagerListener.ActionO
                             val indentOption = loadIndentOptions(project, request.file.virtualFile.path)
                             val formatted = DioxusIntellij.format(request.file.text, indentOption.useTabs, indentOption.indentSize, false)
                             WriteCommandAction.writeCommandAction(project).withName("Format RSX").run<Exception> {
-                                request.file.fileDocument.setText(formatted)
-                                FileDocumentManager.getInstance().saveDocument(request.file.fileDocument)
+                                request.file.document?.let {
+                                    it.setText(formatted)
+                                    FileDocumentManager.getInstance().saveDocument(it)
+                                }
                             }
                         }
                     }
