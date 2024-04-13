@@ -14,7 +14,7 @@
           <option value="runIde" />
         </list>
       </option>
-      <option name="vmOptions" value="-Djna.debug_load=true -Djna.debug_load.jna=true -Djna.library.path=C:\Users\atty\src\github.com\atty303\dioxus\native\target\debug" />
+      <option name="vmOptions" value="" />
     </ExternalSystemSettings>
     <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
     <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>

@@ -13,11 +13,10 @@ class DioxusCheckOnSaveAction : ActionsOnSaveFileDocumentManagerListener.ActionO
     }
 
     override fun processDocuments(project: Project, documents: Array<Document>) {
-        documents.toList().forEach { doc ->
-            val formatted = DioxusIntellij.format(doc.text)
-            WriteCommandAction.writeCommandAction(project).withName("Dioxus Format").run<Exception> {
+        documents.forEach { doc ->
+            val formatted = DioxusIntellij.format(doc.text, false, 4, false)
+            WriteCommandAction.writeCommandAction(project).withName("Format RSX").run<Exception> {
                 doc.setText(formatted)
-//            FileDocumentManager.getInstance().saveDocument(doc)
             }
         }
     }
