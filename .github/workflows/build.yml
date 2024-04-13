@@ -94,6 +94,13 @@ jobs:
       - name: Build plugin
         run: ./gradlew buildPlugin
 
+      - name: Sign plugin
+        env:
+          CERTIFICATE_CHAIN: ${{ secrets.SIGNING_CERTIFICATE_CHAIN }}
+          PRIVATE_KEY: ${{ secrets.SIGNING_PRIVATE_KEY }}
+          PRIVATE_KEY_PASSWORD: ${{ secrets.SIGNING_PRIVATE_KEY_PASSWORD }}
+        run: ./gradlew signPlugin
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
@@ -112,6 +119,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: plugin
+          path: build/distributions/
 
       - uses: actions/create-github-app-token@v1
         id: app-token
@@ -124,4 +132,9 @@ jobs:
       - name: Upload release asset
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
-        run: gh release upload ${{ needs.release-please.outputs.tag_name }} dioxus-*.zip
+        run: gh release upload ${{ needs.release-please.outputs.tag_name }} build/distributions/dioxus-*.zip
+
+      - name: Upload to Marketplace
+        env:
+          PUBLISH_TOKEN: ${{ secrets.MARKETPLACE_PUBLISH_TOKEN }}
+        run: ./gradlew publishPlugin
