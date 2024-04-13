@@ -122,4 +122,4 @@ jobs:
       - name: Upload release asset
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
-        run: gh release upload ${{ needs.release-please.outputs.tag_name }} plugin/*.zip
+        run: gh release upload ${{ needs.release-please.outputs.tag_name }} *.zip
