@@ -1,5 +1,6 @@
 package com.dioxuslabs.dioxus.actions
 
+import com.dioxuslabs.dioxus.DioxusPluginDisposable
 import com.dioxuslabs.dioxus.native.DioxusIntellij
 import com.intellij.application.options.CodeStyle
 import com.intellij.codeInsight.actions.onSave.FormatOnSaveOptions
@@ -15,7 +16,6 @@ import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessProjectDir
-import com.intellij.openapi.util.Disposer
 import com.intellij.psi.PsiFile
 import org.rust.cargo.project.settings.rustSettings
 import org.rust.cargo.project.settings.rustfmtSettings
@@ -76,9 +76,7 @@ private fun loadIndentOptions(project: Project, path: String): IndentOption {
     val projectDir = project.guessProjectDir()?.pathAsPath ?: return default
     val cmd = CargoCommandLine("fmt", projectDir, listOf("--", "--print-config", "current", path))
     val runner: (CapturingProcessHandler) -> ProcessOutput = { it.runProcess() }
-    val disposable = Disposer.newDisposable()
-    val r = Cargo(toolchain).toGeneralCommandLine(project, cmd).execute(disposable, runner = runner)
-    disposable.dispose()
+    val r = Cargo(toolchain).toGeneralCommandLine(project, cmd).execute(DioxusPluginDisposable.getInstance(project), runner = runner)
 
     val out = r.ok() ?: return default
 
