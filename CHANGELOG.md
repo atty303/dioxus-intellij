@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.2.0](https://github.com/atty303/dioxus-intellij/compare/v1.1.7...v1.2.0) (2024-04-13)
+
+
+### Features
+
+* added darwin targets ([446254b](https://github.com/atty303/dioxus-intellij/commit/446254b2820de34558ce35510f6e58d3a3515f2c))
+
+
+### Bug Fixes
+
+* darwin build ([2898297](https://github.com/atty303/dioxus-intellij/commit/28982970def0d6c8a049fed414fd465c8d57148f))
+
 ## [1.1.7](https://github.com/atty303/dioxus-intellij/compare/v1.1.6...v1.1.7) (2024-04-13)
 
 

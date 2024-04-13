@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.dioxuslabs"
-version = "1.1.7" // x-release-please-version
+version = "1.2.0" // x-release-please-version
 
 repositories {
     mavenCentral()
