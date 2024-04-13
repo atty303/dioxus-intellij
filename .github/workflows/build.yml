@@ -106,6 +106,8 @@ jobs:
     needs: [ build-plugin, release-please ]
     if: ${{ needs.release-please.outputs.release_created }}
     steps:
+      - uses: actions/checkout@v4
+
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
@@ -122,4 +124,4 @@ jobs:
       - name: Upload release asset
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
-        run: gh release upload ${{ needs.release-please.outputs.tag_name }} *.zip
+        run: gh release upload ${{ needs.release-please.outputs.tag_name }} dioxus-*.zip
