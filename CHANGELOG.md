@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.1.5](https://github.com/atty303/dioxus-intellij/compare/v1.1.4...v1.1.5) (2024-04-13)
+
+
+### Bug Fixes
+
+* publish ([64f111d](https://github.com/atty303/dioxus-intellij/commit/64f111d9e7b233e422d1cb82bee850133b40eff0))
+* version ([1feb54a](https://github.com/atty303/dioxus-intellij/commit/1feb54a2db52b5d861f1a6d2451dda32d1f6ce08))
+* version ([1888f35](https://github.com/atty303/dioxus-intellij/commit/1888f350d47618130761f141ed45e4e2d2437d1c))
+
 ## [1.1.4](https://github.com/atty303/dioxus-intellij/compare/v1.1.3...v1.1.4) (2024-04-13)
 
 
