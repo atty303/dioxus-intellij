@@ -43,5 +43,6 @@ tasks {
 
     publishPlugin {
         token.set(System.getenv("PUBLISH_TOKEN"))
+        distributionFile.set(file("build/distributions/dioxus-1.1.3-signed.zip")) // x-release-please-version
     }
 }

@@ -105,7 +105,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: plugin
-          path: build/distributions/*.zip
+          path: build/distributions/dioxus-*-signed.zip
           if-no-files-found: error
 
   publish:
@@ -132,7 +132,7 @@ jobs:
       - name: Upload release asset
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
-        run: gh release upload ${{ needs.release-please.outputs.tag_name }} build/distributions/dioxus-*.zip
+        run: gh release upload ${{ needs.release-please.outputs.tag_name }} build/distributions/dioxus-*-signed.zip
 
       - name: Upload to Marketplace
         env:
