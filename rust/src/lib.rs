@@ -17,7 +17,7 @@ pub extern "C" fn format(raw: *const c_char, use_tabs: c_int, indent_size: c_int
         }).join();
         match r {
             Ok(out) => CString::new(out).expect("Failed to create CString").into_raw(),
-            Err(e) => {
+            Err(_) => {
                 null_mut()
             }
         }
