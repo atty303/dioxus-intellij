@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.4](https://github.com/atty303/dioxus-intellij/compare/v1.1.3...v1.1.4) (2024-04-13)
+
+
+### Bug Fixes
+
+* sign plugin ([6f2f279](https://github.com/atty303/dioxus-intellij/commit/6f2f279e0c06f43bc94d2b058ecd18e8aed178ee))
+
 ## [1.1.3](https://github.com/atty303/dioxus-intellij/compare/v1.1.2...v1.1.3) (2024-04-13)
 
 
