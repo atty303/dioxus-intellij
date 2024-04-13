@@ -16,6 +16,8 @@ jobs:
             name: dioxus.dll
           - target: "x86_64-unknown-linux-gnu"
             name: libdioxus.so
+          - target: "aarch64-unknown-linux-gnu"
+            name: libdioxus.so
     steps:
       - uses: actions/checkout@v4
 
@@ -52,5 +54,25 @@ jobs:
 
       - name: Download artifacts
         uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+      - name: Display structure of downloaded files
+        run: ls -R
+
+      - name: Move artifacts
+        run: |
+          mv artifacts/x86_64-pc-windows-gnu/dioxus.dll src/main/resources/win32-x86-64/dioxus.dll
+          mv artifacts/x86_64-unknown-linux-gnu/libdioxus.so src/main/resources/linux-x86-64/libdioxus.so
+          mv artifacts/aarch64-unknown-linux-gnu/libdioxus.so src/main/resources/linux-aarch64/libdioxus.so
+
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: "temurin"
+          java-version: "17"
+          cache: gradle
+
+      - name: Build gradle
+        run: ./gradlew buildPlugin
       - name: Display structure of downloaded files
         run: ls -R
