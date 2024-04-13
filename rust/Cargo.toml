@@ -10,9 +10,3 @@ dioxus-autofmt = "0.5.1"
 [lib]
 crate-type = ["cdylib"]
 name = "dioxus"
-
-[target.aarch64-apple-darwin]
-image = "ghcr.io/atty303/aarch64-apple-darwin-cross:latest"
-
-[target.x86_64-apple-darwin]
-image = "ghcr.io/atty303/x86_64-apple-darwin-cross:latest"
