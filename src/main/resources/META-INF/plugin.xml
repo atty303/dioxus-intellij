@@ -14,7 +14,13 @@
          Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
     <description><![CDATA[
-    Enter short description for your plugin here.<br>
+    Provides the functionality of Dioxus CLI as a plugin.
+    <ul>
+      <li>
+        <em>Auto-format RSX</em>: Automatically format RSX files on save.
+        Respect the <code>Action on Save</code> setting and rustfmt configuration.
+      </li>
+    </ul>
   ]]></description>
 
     <!-- Product and plugin compatibility requirements.
