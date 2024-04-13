@@ -25,7 +25,7 @@ jobs:
       - name: Rust Cache
         uses: Swatinem/rust-cache@v2
         with:
-          cache-targets: false
+          workspaces: rust
 
       - name: Install cross
         uses: baptiste0928/cargo-install@v3
@@ -34,7 +34,7 @@ jobs:
 
       - name: Build
         working-directory: rust
-        run: cross build --target x86_64-pc-windows-gnu --release
+        run: cross build --target ${{ matrix.target }} --release
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
