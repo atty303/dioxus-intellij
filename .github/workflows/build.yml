@@ -34,8 +34,12 @@ jobs:
             name: dioxus.dll
           - target: "x86_64-unknown-linux-gnu"
             name: libdioxus.so
+          - target: "x86_64-apple-darwin"
+            name: libdioxus.dylib
           - target: "aarch64-unknown-linux-gnu"
             name: libdioxus.so
+          - target: "aarch64-apple-darwin"
+            name: libdioxus.dylib
     steps:
       - uses: actions/checkout@v4
 
@@ -83,6 +87,10 @@ jobs:
           mv artifacts/x86_64-unknown-linux-gnu/libdioxus.so src/main/resources/linux-x86-64/libdioxus.so
           mkdir -p src/main/resources/linux-aarch64
           mv artifacts/aarch64-unknown-linux-gnu/libdioxus.so src/main/resources/linux-aarch64/libdioxus.so
+          mkdir -p src/main/resources/darwin-x86-64
+          mv artifacts/x86_64-apple-darwin/libdioxus.dylib src/main/resources/darwin-x86-64/libdioxus.dylib
+          mkdir -p src/main/resources/darwin-aarch64
+          mv artifacts/aarch64-apple-darwin/libdioxus.dylib src/main/resources/darwin-aarch64/libdioxus.dylib
 
       - name: Setup Java
         uses: actions/setup-java@v4
