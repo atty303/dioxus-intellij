@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/atty303/dioxus-intellij/compare/v1.1.0...v1.1.1) (2024-04-13)
+
+
+### Bug Fixes
+
+* ci ([c3f4b78](https://github.com/atty303/dioxus-intellij/commit/c3f4b78b598e05d98802572ddcd9b07f4a55ce03))
+
 ## [1.1.0](https://github.com/atty303/dioxus-intellij/compare/v1.0.0...v1.1.0) (2024-04-13)
 
 
