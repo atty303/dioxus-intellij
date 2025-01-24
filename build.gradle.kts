@@ -24,7 +24,7 @@ dependencies {
 intellijPlatform {
     pluginConfiguration {
         ideaVersion {
-            sinceBuild = "232"
+            sinceBuild = "242"
             untilBuild = "243.*"
         }
     }
@@ -49,13 +49,4 @@ tasks {
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         kotlinOptions.jvmTarget = "17"
     }
-
-//    publishPlugin {
-//        archiveFile.set(file("build/distributions/dioxus-${version}-signed.zip"))
-//    }
 }
-
-//project.afterEvaluate {
-//    val publishPlugin = tasks.findByPath("publishPlugin")
-//    publishPlugin?.setDependsOn(emptySet<Any>())
-//}
