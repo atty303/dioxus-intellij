@@ -1,7 +1,7 @@
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "1.9.22"
-    id("org.jetbrains.intellij") version "1.17.2"
+    id("org.jetbrains.intellij.platform") version "2.2.1"
 }
 
 group = "com.dioxuslabs"
@@ -9,15 +9,35 @@ version = "1.2.0" // x-release-please-version
 
 repositories {
     mavenCentral()
+    intellijPlatform {
+        defaultRepositories()
+    }
 }
 
-// Configure Gradle IntelliJ Plugin
-// Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
-intellij {
-    version.set("2024.1")
-    type.set("IU") // Target IDE Platform
+dependencies {
+    intellijPlatform {
+        intellijIdeaUltimate("2024.3")
+        plugin("com.jetbrains.rust", "243.23654.116")
+    }
+}
 
-    plugins.set(listOf("com.jetbrains.rust:241.25026.24"))
+intellijPlatform {
+    pluginConfiguration {
+        ideaVersion {
+            sinceBuild = "232"
+            untilBuild = "243.*"
+        }
+    }
+
+    signing {
+        certificateChain = System.getenv("CERTIFICATE_CHAIN")
+        privateKey = System.getenv("PRIVATE_KEY")
+        password = System.getenv("PRIVATE_KEY_PASSWORD")
+    }
+
+    publishing {
+        token = System.getenv("PUBLISH_TOKEN")
+    }
 }
 
 tasks {
@@ -30,24 +50,12 @@ tasks {
         kotlinOptions.jvmTarget = "17"
     }
 
-    patchPluginXml {
-        sinceBuild.set("232")
-        untilBuild.set("242.*")
-    }
-
-    signPlugin {
-        certificateChain.set(System.getenv("CERTIFICATE_CHAIN"))
-        privateKey.set(System.getenv("PRIVATE_KEY"))
-        password.set(System.getenv("PRIVATE_KEY_PASSWORD"))
-    }
-
-    publishPlugin {
-        token.set(System.getenv("PUBLISH_TOKEN"))
-        distributionFile.set(file("build/distributions/dioxus-${version}-signed.zip"))
-    }
+//    publishPlugin {
+//        archiveFile.set(file("build/distributions/dioxus-${version}-signed.zip"))
+//    }
 }
 
-project.afterEvaluate {
-    val publishPlugin = tasks.findByPath("publishPlugin")
-    publishPlugin?.setDependsOn(emptySet<Any>())
-}
+//project.afterEvaluate {
+//    val publishPlugin = tasks.findByPath("publishPlugin")
+//    publishPlugin?.setDependsOn(emptySet<Any>())
+//}
