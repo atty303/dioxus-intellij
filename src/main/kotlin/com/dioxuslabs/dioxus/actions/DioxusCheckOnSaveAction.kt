@@ -78,8 +78,7 @@ private fun loadIndentOptions(project: Project, path: String): IndentOption {
 
     val projectDir = project.guessProjectDir()?.pathAsPath ?: return default
     val cmd = CargoCommandLine("fmt", projectDir, listOf("--", "--print-config", "current", path))
-    val runner: (CapturingProcessHandler) -> ProcessOutput = { it.runProcess() }
-    val r = Cargo(toolchain).toGeneralCommandLine(project, cmd).execute(DioxusPluginDisposable.getInstance(project), runner = runner)
+    val r = Cargo(toolchain).toGeneralCommandLine(project, cmd).execute()
 
     val out = r.ok() ?: return default
 
