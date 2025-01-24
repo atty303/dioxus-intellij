@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.1](https://github.com/atty303/dioxus-intellij/compare/v1.3.0...v1.3.1) (2025-01-24)
+
+
+### Bug Fixes
+
+* compatibility problem ([4d8a755](https://github.com/atty303/dioxus-intellij/commit/4d8a755b2b0dc7402595545abc160fe2361103ef))
+
 ## [1.3.0](https://github.com/atty303/dioxus-intellij/compare/v1.2.0...v1.3.0) (2025-01-24)
 
 
