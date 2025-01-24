@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/atty303/dioxus-intellij/compare/v1.2.0...v1.3.0) (2025-01-24)
+
+
+### Features
+
+* upgrade to 2024.3 ([75adb81](https://github.com/atty303/dioxus-intellij/commit/75adb818b1594d819becfb5656e308c74495f8c6))
+
 ## [1.2.0](https://github.com/atty303/dioxus-intellij/compare/v1.1.7...v1.2.0) (2024-04-13)
 
 
