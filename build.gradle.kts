@@ -157,9 +157,8 @@ tasks.register<BuildRustTask>("buildRust") {
 val targetMapping = mapOf(
     "x86_64-pc-windows-msvc" to ("win32-x86-64" to "dioxus.dll"),
     "x86_64-pc-windows-gnu" to ("win32-x86-64" to "dioxus.dll"),
-    // JNA on Windows ARM search x86-64
-    "aarch64-pc-windows-msvc" to ("win32-x86-64" to "dioxus.dll"),
-    "aarch64-pc-windows-gnu" to ("win32-x86-64" to "dioxus.dll"),
+    "aarch64-pc-windows-msvc" to ("win32-aarch64" to "dioxus.dll"),
+    "aarch64-pc-windows-gnu" to ("win32-aarch64" to "dioxus.dll"),
     "x86_64-unknown-linux-gnu" to ("linux-x86-64" to "libdioxus.so"),
     "aarch64-unknown-linux-gnu" to ("linux-aarch64" to "libdioxus.so"),
     "x86_64-apple-darwin" to ("darwin-x86-64" to "libdioxus.dylib"),
