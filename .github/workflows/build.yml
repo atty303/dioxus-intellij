@@ -99,6 +99,8 @@ jobs:
           mkdir -p src/main/resources/darwin-aarch64
           mv artifacts/aarch64-apple-darwin/libdioxus.dylib src/main/resources/darwin-aarch64/libdioxus.dylib
 
+          find src/main/resources
+
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
