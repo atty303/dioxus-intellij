@@ -184,9 +184,9 @@ tasks.register("copyRustLibrary") {
         val source = File(sourcePath)
         val dest = File(destPath)
 
-        if (!source.exists()) {
-            throw GradleException("Not found: $source")
-        }
+//        if (!source.exists()) {
+//            throw GradleException("Not found: $source")
+//        }
 
         dest.parentFile.mkdirs()
         source.copyTo(dest, overwrite = true)
