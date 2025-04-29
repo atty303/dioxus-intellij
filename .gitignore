@@ -5,7 +5,6 @@ build/
 !**/src/test/**/build/
 target/
 .kotlin/
-allure-results
 
 # Build artifacts
 src/main/resources/win32-*
