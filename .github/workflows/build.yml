@@ -62,7 +62,7 @@ jobs:
         shell: bash
         run: |
           mise run rust:build --target ${{ matrix.target }} --release
-          find rust/target/release
+          find rust/target
 
       - name: Test
         run: mise run test
