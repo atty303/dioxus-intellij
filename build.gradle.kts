@@ -2,6 +2,9 @@ import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 
+val osCurrent = org.gradle.internal.os.OperatingSystem.current()
+logger.lifecycle("Running on ${osCurrent.familyName}(${osCurrent}) with architecture ${System.getProperty("os.arch")}")
+
 plugins {
     id("java") // Java support
     alias(libs.plugins.kotlin) // Kotlin support
