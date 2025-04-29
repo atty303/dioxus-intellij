@@ -1,6 +1,7 @@
 import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
+import java.nio.file.Files
 
 plugins {
     id("java") // Java support
@@ -180,13 +181,41 @@ tasks.register("copyRustLibrary") {
     inputs.file(sourcePath)
     outputs.file(destPath)
 
+    // Define the directory to inspect
+    // Adjust the path separators if necessary, though Paths.get should handle it.
+    // Use project.layout.projectDirectory.dir() for robustness
+    val targetDir = project.layout.projectDirectory.dir("rust/target")
+
     doLast {
+        val targetPath = targetDir.asFile.toPath()
+        println("--- Debug Task: Listing files in $targetPath ---")
+
+        if (Files.exists(targetPath) && Files.isDirectory(targetPath)) {
+            try {
+                // Walk the file tree recursively
+                val files = Files.walk(targetPath).use { stream ->
+                    stream.map { path -> targetPath.relativize(path).toString() }
+                        .sorted()
+                        .toList()
+                }
+
+                if (files.isNotEmpty()) {
+                    println("Files found:")
+                    files.forEach { println("  - $it") }
+                } else {
+                    println("Directory exists but is empty.")
+                }
+            } catch (e: Exception) {
+                println("Error listing files in $targetPath: ${e.message}")
+                e.printStackTrace() // Print stack trace for more details
+            }
+        } else {
+            println("Directory $targetPath does not exist.")
+        }
+        println("--- End Debug Task ---")
+
         val source = File(sourcePath)
         val dest = File(destPath)
-
-//        if (!source.exists()) {
-//            throw GradleException("Not found: $source")
-//        }
 
         dest.parentFile.mkdirs()
         source.copyTo(dest, overwrite = true)
