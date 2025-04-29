@@ -142,13 +142,13 @@ abstract class BuildRustTask : DefaultTask() {
     fun buildRust() {
         val execOps = services.get(ExecOperations::class.java)
         execOps.exec {
-            commandLine("mise", "run", "rust:build", "--target", target.get())
+            commandLine("mise", "run", "rust:build", "--target", target.get(), "--release")
         }
     }
 }
 
 tasks.register<BuildRustTask>("buildRust") {
-    target.set("x86_64-pc-windows-msvc")
+    target.set(Utils.guessTargetFromPlatform(org.gradle.internal.os.OperatingSystem.current().familyName, System.getProperty("os.arch")))
 }
 
 abstract class CopyRustLibrariesTask : DefaultTask() {
@@ -171,23 +171,15 @@ abstract class CopyRustLibrariesTask : DefaultTask() {
         val targetMapping = mapOf(
             "x86_64-pc-windows-msvc" to ("win32-x86-64" to "dioxus.dll"),
             "x86_64-pc-windows-gnu" to ("win32-x86-64" to "dioxus.dll"),
+            "aarch64-pc-windows-msvc" to ("win32-aarch64" to "dioxus.dll"),
+            "aarch64-pc-windows-gnu" to ("win32-aarch64" to "dioxus.dll"),
             "x86_64-unknown-linux-gnu" to ("linux-x86-64" to "libdioxus.so"),
             "aarch64-unknown-linux-gnu" to ("linux-aarch64" to "libdioxus.so"),
             "x86_64-apple-darwin" to ("darwin-x86-64" to "libdioxus.dylib"),
             "aarch64-apple-darwin" to ("darwin-aarch64" to "libdioxus.dylib"),
         )
 
-        val osName = currentOs.get()
-        val archName = currentArch.get()
-
-        val targetKey = when {
-            osName == "windows" && archName == "amd64" -> "x86_64-pc-windows-msvc"
-            osName == "linux" && archName == "amd64" -> "x86_64-unknown-linux-gnu"
-            osName == "linux" && archName == "aarch64" -> "aarch64-unknown-linux-gnu"
-            osName == "mac" && archName == "x86_64" -> "x86_64-apple-darwin"
-            osName == "mac" && (archName == "aarch64" || archName == "arm64") -> "aarch64-apple-darwin"
-            else -> throw GradleException("Platform doesn't support: $osName, $archName")
-        }
+        val targetKey = Utils.guessTargetFromPlatform(currentOs.get(), currentArch.get())
 
         val resourceDir = targetMapping[targetKey]
             ?: throw GradleException("Target platform is not supported: $targetKey")
@@ -211,14 +203,9 @@ tasks.register<CopyRustLibrariesTask>("copyRustLibrary") {
     rustTargetDir.set(project.file("rust/target"))
     resourcesDir.set(project.file("src/main/resources"))
 
-    val current = org.gradle.internal.os.OperatingSystem.current()
-    currentOs.set(when {
-        current.isWindows -> "windows"
-        current.isLinux -> "linux"
-        current.isMacOsX -> "mac"
-        else -> "unknown"
-    })
+    currentOs.set(org.gradle.internal.os.OperatingSystem.current().familyName)
     currentArch.set(System.getProperty("os.arch"))
+
     dependsOn("patchPluginXml", "buildRust")
 }
 
@@ -245,4 +232,17 @@ intellijPlatformTesting {
             }
         }
     }
+}
+
+object Utils {
+    fun guessTargetFromPlatform(osName: String, archName: String): String =
+        when {
+            osName == "windows" && archName == "amd64" -> "x86_64-pc-windows-msvc"
+            osName == "windows" && archName == "aarch64" -> "aarch64-pc-windows-msvc"
+            osName == "linux" && archName == "amd64" -> "x86_64-unknown-linux-gnu"
+            osName == "linux" && archName == "aarch64" -> "aarch64-unknown-linux-gnu"
+            osName == "mac" && archName == "x86_64" -> "x86_64-apple-darwin"
+            osName == "mac" && (archName == "aarch64" || archName == "arm64") -> "aarch64-apple-darwin"
+            else -> throw GradleException("Platform doesn't support: $osName, $archName")
+        }
 }
