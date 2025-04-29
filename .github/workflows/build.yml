@@ -62,7 +62,7 @@ jobs:
         shell: bash
         run: |
           mise run rust:build --target ${{ matrix.target }} --release
-          find src/main/resources
+          find rust/target/release
 
       - name: Test
         run: mise run test
@@ -91,7 +91,7 @@ jobs:
           mkdir -p src/main/resources/win32-x86-64
           mv artifacts/x86_64-pc-windows-msvc/dioxus.dll src/main/resources/win32-x86-64/dioxus.dll
           mkdir -p src/main/resources/win32-aarch64
-          mv artifacts/x86_64-pc-windows-msvc/dioxus.dll src/main/resources/win32-aarch64/dioxus.dll
+          mv artifacts/aarch64-pc-windows-msvc/dioxus.dll src/main/resources/win32-aarch64/dioxus.dll
 
           mkdir -p src/main/resources/linux-x86-64
           mv artifacts/x86_64-unknown-linux-gnu/libdioxus.so src/main/resources/linux-x86-64/libdioxus.so
