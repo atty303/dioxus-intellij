@@ -26,20 +26,28 @@ jobs:
           token: ${{ steps.app-token.outputs.token }}
 
   build-rust:
-    runs-on: ubuntu-latest
     strategy:
       matrix:
         include:
           - target: "x86_64-pc-windows-gnu"
+            runner: windows-latest
+            name: dioxus.dll
+          - target: "aarch64-pc-windows-gnu"
+            runner: windows-11-arm
             name: dioxus.dll
           - target: "x86_64-unknown-linux-gnu"
+            runner: ubuntu-24.04
+            name: libdioxus.so
+          - target: "aarch64-unknown-linux-gnu"
+            runner: ubuntu-24.04-arm
             name: libdioxus.so
           - target: "x86_64-apple-darwin"
+            runner: macos-13
             name: libdioxus.dylib
-          - target: "aarch64-unknown-linux-gnu"
-            name: libdioxus.so
           - target: "aarch64-apple-darwin"
+            runner: macos-15
             name: libdioxus.dylib
+    runs-on: ${{ matrix.runner }}
     steps:
       - uses: actions/checkout@v4
 
@@ -52,14 +60,9 @@ jobs:
           key: ${{ matrix.target }}
           workspaces: rust
 
-      - name: Install cross
-        uses: baptiste0928/cargo-install@v3
-        with:
-          crate: cross
-
       - name: Build
         working-directory: rust
-        run: cross build --target ${{ matrix.target }} --release
+        run: cargo build --target ${{ matrix.target }} --release
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -83,10 +86,14 @@ jobs:
         run: |
           mkdir -p src/main/resources/win32-x86-64
           mv artifacts/x86_64-pc-windows-gnu/dioxus.dll src/main/resources/win32-x86-64/dioxus.dll
+          mkdir -p src/main/resources/win32-aarch64
+          mv artifacts/x86_64-pc-windows-gnu/dioxus.dll src/main/resources/win32-aarch64/dioxus.dll
+
           mkdir -p src/main/resources/linux-x86-64
           mv artifacts/x86_64-unknown-linux-gnu/libdioxus.so src/main/resources/linux-x86-64/libdioxus.so
           mkdir -p src/main/resources/linux-aarch64
           mv artifacts/aarch64-unknown-linux-gnu/libdioxus.so src/main/resources/linux-aarch64/libdioxus.so
+
           mkdir -p src/main/resources/darwin-x86-64
           mv artifacts/x86_64-apple-darwin/libdioxus.dylib src/main/resources/darwin-x86-64/libdioxus.dylib
           mkdir -p src/main/resources/darwin-aarch64
@@ -96,7 +103,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: "temurin"
-          java-version: "17"
+          java-version: "21"
           cache: gradle
 
       - name: Build plugin
@@ -144,7 +151,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: "temurin"
-          java-version: "17"
+          java-version: "21"
           cache: gradle
 
       - name: Upload to Marketplace
