@@ -20,7 +20,7 @@ jobs:
         with:
           app-id: ${{ secrets.TOKEN_APP_ID }}
           private-key: ${{ secrets.TOKEN_PRIVATE_KEY }}
-      - uses: google-github-actions/release-please-action@v4
+      - uses: google-apis/release-please-action@v4
         id: release-please
         with:
           token: ${{ steps.app-token.outputs.token }}
@@ -29,10 +29,10 @@ jobs:
     strategy:
       matrix:
         include:
-          - target: "x86_64-pc-windows-gnu"
+          - target: "x86_64-pc-windows-msvc"
             runner: windows-latest
             name: dioxus.dll
-          - target: "aarch64-pc-windows-gnu"
+          - target: "aarch64-pc-windows-msvc"
             runner: windows-11-arm
             name: dioxus.dll
           - target: "x86_64-unknown-linux-gnu"
