@@ -52,11 +52,11 @@ jobs:
       - uses: actions/checkout@v4
       - uses: jdx/mise-action@v2
 
-#      - name: Rust Cache
-#        uses: Swatinem/rust-cache@v2
-#        with:
-#          key: ${{ matrix.target }}
-#          workspaces: rust
+      - name: Rust Cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ matrix.target }}
+          workspaces: rust
 
       - name: Build
         shell: bash
@@ -66,6 +66,12 @@ jobs:
 
       - name: Test
         run: mise run test
+
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v5
+        if: success() || failure()
+        with:
+          report_paths: "**/build/test-results/*/TEST-*.xml"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
