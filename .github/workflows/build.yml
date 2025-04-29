@@ -16,6 +16,7 @@ jobs:
       release_created: ${{ steps.release-please.outputs.release_created }}
       tag_name: ${{ steps.release-please.outputs.tag_name }}
     steps:
+      - uses: Kesin11/actions-timeline@v2
       - uses: actions/create-github-app-token@v1
         id: app-token
         with:
@@ -50,6 +51,7 @@ jobs:
             name: libdioxus.dylib
     runs-on: ${{ matrix.runner }}
     steps:
+      - uses: Kesin11/actions-timeline@v2
       - uses: actions/checkout@v4
       - uses: jdx/mise-action@v2
 
@@ -86,6 +88,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-rust
     steps:
+      - uses: Kesin11/actions-timeline@v2
       - uses: actions/checkout@v4
 
       - name: Download artifacts
@@ -142,6 +145,7 @@ jobs:
     needs: [ build-plugin, release-please ]
     if: ${{ needs.release-please.outputs.release_created }}
     steps:
+      - uses: Kesin11/actions-timeline@v2
       - uses: actions/checkout@v4
 
       - name: Download artifacts
