@@ -1,6 +1,10 @@
 [tools]
 java = "zulu-21"
 
+[tasks.run-ide]
+run = "./gradlew runIde"
+run_windows = "gradlew.bat runIde"
+
 [tasks.build]
 description = "Build plugin"
 run = "./gradlew buildPlugin"
