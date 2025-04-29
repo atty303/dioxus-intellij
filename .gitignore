@@ -6,11 +6,6 @@ build/
 target/
 .kotlin/
 
-# Build artifacts
-src/main/resources/win32-*
-src/main/resources/linux-*
-src/main/resources/darwin-*
-
 .intellijPlatform/
 
 ### IntelliJ IDEA ###
