@@ -241,8 +241,8 @@ object Utils {
             osName == "windows" && archName == "aarch64" -> "aarch64-pc-windows-msvc"
             osName == "linux" && archName == "amd64" -> "x86_64-unknown-linux-gnu"
             osName == "linux" && archName == "aarch64" -> "aarch64-unknown-linux-gnu"
-            osName == "mac" && archName == "x86_64" -> "x86_64-apple-darwin"
-            osName == "mac" && (archName == "aarch64" || archName == "arm64") -> "aarch64-apple-darwin"
+            osName == "os x" && archName == "x86_64" -> "x86_64-apple-darwin"
+            osName == "os x" && archName == "aarch64" -> "aarch64-apple-darwin"
             else -> throw GradleException("Platform doesn't support: $osName, $archName")
         }
 }
