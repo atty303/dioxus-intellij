@@ -8,5 +8,8 @@
         "ghcr.io/atty303/devcontainer-features/mise:1": {
             "activate": "shims"
         }
+    },
+    "postCreateCommand": {
+      "apt": "sudo apt update && sudo apt install -y libfreetype6 fontconfig"
     }
 }

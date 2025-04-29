@@ -1,5 +1,7 @@
 # Changelog
 
+## [Unreleased]
+
 ## [1.3.1](https://github.com/atty303/dioxus-intellij/compare/v1.3.0...v1.3.1) (2025-01-24)
 
 

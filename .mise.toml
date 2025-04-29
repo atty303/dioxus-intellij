@@ -1,0 +1,17 @@
+[tools]
+java = "zulu-21"
+
+[tasks.build]
+description = "Build plugin"
+run = "./gradlew buildPlugin"
+run_windows = "gradlew.bat buildPlugin"
+
+[tasks.test]
+description = "Run tests"
+run = "./gradlew check"
+run_windows = "gradlew.bat check"
+
+[tasks.verify]
+description = "Run Verify Plugin task and IntelliJ Plugin Verifier tool"
+run = "./gradlew verifyPlugin"
+run_windows = "gradlew.bat verifyPlugin"
