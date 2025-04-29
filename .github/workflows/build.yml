@@ -59,8 +59,10 @@ jobs:
 #          workspaces: rust
 
       - name: Build
+        shell: bash
         run: |
           mise run rust:build --target ${{ matrix.target }} --release
+          find src/main/resources
 
       - name: Test
         run: mise run test
@@ -84,6 +86,7 @@ jobs:
           path: artifacts
 
       - name: Move artifacts to resources
+        shell: bash
         run: |
           mkdir -p src/main/resources/win32-x86-64
           mv artifacts/x86_64-pc-windows-msvc/dioxus.dll src/main/resources/win32-x86-64/dioxus.dll
