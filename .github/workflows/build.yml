@@ -73,6 +73,7 @@ jobs:
         if: success() || failure()
         with:
           report_paths: "**/build/test-results/*/TEST-*.xml"
+          check_name: "Test report [${{ matrix.target }}]"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
