@@ -8,23 +8,27 @@ import com.intellij.openapi.fileTypes.FileTypeManager
 import com.intellij.openapi.util.io.FileUtil
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.platform.ide.progress.ModalTaskOwner.project
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiFileFactory
+import com.intellij.testFramework.HeavyPlatformTestCase
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
+import com.intellij.testFramework.registerComponentImplementation
+import com.intellij.testFramework.registerServiceInstance
+import com.intellij.testFramework.unregisterService
+import com.intellij.util.application
 import org.rust.lang.RsFileType
 import java.io.File
 
 class DioxusActionOnSaveTest : BasePlatformTestCase() {
-
     private lateinit var tempDir: File
     private lateinit var rustFile: VirtualFile
-    private lateinit var psiFile: PsiFile
     private lateinit var document: Document
 
     override fun setUp() {
         super.setUp()
-        
+
         // Create a temporary directory for test files
         tempDir = FileUtil.createTempDirectory("dioxus-test", null)
         
@@ -34,7 +38,7 @@ class DioxusActionOnSaveTest : BasePlatformTestCase() {
                 let app = rsx! {
                     div {
                     h1 { "Hello, world!" }
-                        p { "This is a test." }
+                    p { "This is a test." }
                     }
                 };
             }
@@ -48,7 +52,6 @@ class DioxusActionOnSaveTest : BasePlatformTestCase() {
         rustFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(file)!!
 
         // Get the PSI file and document
-        psiFile = myFixture.psiManager.findFile(rustFile)!!
         document = FileDocumentManager.getInstance().getDocument(rustFile)!!
 
         // Enable "Format on Save" option
@@ -78,9 +81,6 @@ class DioxusActionOnSaveTest : BasePlatformTestCase() {
         // Create and run the action
         val action = DioxusCheckOnSaveAction()
         action.processDocuments(project, arrayOf(document))
-        
-        // Wait for the background task to complete
-        Thread.sleep(1000)
         
         // Refresh the document from disk
         FileDocumentManager.getInstance().reloadFiles(rustFile)

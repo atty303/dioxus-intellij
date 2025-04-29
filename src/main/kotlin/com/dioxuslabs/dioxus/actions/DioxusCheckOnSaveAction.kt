@@ -7,6 +7,7 @@ import com.intellij.codeInsight.actions.onSave.FormatOnSaveOptions
 import com.intellij.execution.process.CapturingProcessHandler
 import com.intellij.execution.process.ProcessOutput
 import com.intellij.ide.actionsOnSave.impl.ActionsOnSaveFileDocumentManagerListener
+import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.editor.Document
@@ -45,7 +46,8 @@ class DioxusCheckOnSaveAction : ActionsOnSaveFileDocumentManagerListener.ActionO
                     override fun run(indicator: ProgressIndicator) {
                         requests.forEach { request ->
                             val indentOption = loadIndentOptions(project, request.file.virtualFile.path)
-                            val formatted = DioxusIntellij.format(request.file.text, indentOption.useTabs, indentOption.indentSize, false)
+                            val text = runReadAction { request.file.text }
+                            val formatted = DioxusIntellij.format(text, indentOption.useTabs, indentOption.indentSize, false)
                             WriteCommandAction.writeCommandAction(project).withName("Format RSX").run<Exception> {
                                 request.file.document?.let {
                                     it.setText(formatted)
