@@ -59,7 +59,10 @@ jobs:
           workspaces: rust
 
       - name: Build
-        run: mise run rust:build --target ${{ matrix.target }} --release
+        run: |
+          mise run rust:build --target ${{ matrix.target }} --release
+          find rust\target\
+        
 
       - name: Test
         run: mise run test
