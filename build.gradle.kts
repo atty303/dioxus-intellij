@@ -134,6 +134,98 @@ tasks {
     }
 }
 
+abstract class BuildRustTask : DefaultTask() {
+    @get:Input
+    abstract val target: Property<String>
+
+    @TaskAction
+    fun buildRust() {
+        val execOps = services.get(ExecOperations::class.java)
+        execOps.exec {
+            commandLine("mise", "run", "rust:build", "--target", target.get())
+        }
+    }
+}
+
+tasks.register<BuildRustTask>("buildRust") {
+    target.set("x86_64-pc-windows-msvc")
+}
+
+abstract class CopyRustLibrariesTask : DefaultTask() {
+    @get:InputDirectory
+    abstract val rustTargetDir: DirectoryProperty
+
+    @get:OutputDirectory
+    abstract val resourcesDir: DirectoryProperty
+
+    @get:Input
+    abstract val currentOs: Property<String>
+
+    @get:Input
+    abstract val currentArch: Property<String>
+
+    @TaskAction
+    fun copyLibraries() {
+        val fileOps = services.get(FileSystemOperations::class.java)
+
+        val targetMapping = mapOf(
+            "x86_64-pc-windows-msvc" to ("win32-x86-64" to "dioxus.dll"),
+            "x86_64-pc-windows-gnu" to ("win32-x86-64" to "dioxus.dll"),
+            "x86_64-unknown-linux-gnu" to ("linux-x86-64" to "libdioxus.so"),
+            "aarch64-unknown-linux-gnu" to ("linux-aarch64" to "libdioxus.so"),
+            "x86_64-apple-darwin" to ("darwin-x86-64" to "libdioxus.dylib"),
+            "aarch64-apple-darwin" to ("darwin-aarch64" to "libdioxus.dylib"),
+        )
+
+        val osName = currentOs.get()
+        val archName = currentArch.get()
+
+        val targetKey = when {
+            osName == "windows" && archName == "amd64" -> "x86_64-pc-windows-msvc"
+            osName == "linux" && archName == "amd64" -> "x86_64-unknown-linux-gnu"
+            osName == "linux" && archName == "aarch64" -> "aarch64-unknown-linux-gnu"
+            osName == "mac" && archName == "x86_64" -> "x86_64-apple-darwin"
+            osName == "mac" && (archName == "aarch64" || archName == "arm64") -> "aarch64-apple-darwin"
+            else -> throw GradleException("Platform doesn't support: $osName, $archName")
+        }
+
+        val resourceDir = targetMapping[targetKey]
+            ?: throw GradleException("Target platform is not supported: $targetKey")
+
+        val resourceDirFolder = resourcesDir.dir(resourceDir.first).get().asFile
+        resourceDirFolder.mkdirs()
+
+        val sourceFile = rustTargetDir.dir(targetKey).get().asFile.resolve(resourceDir.second)
+
+        fileOps.copy {
+            from(sourceFile)
+            into(resourceDirFolder)
+        }
+    }
+}
+
+tasks.register<CopyRustLibrariesTask>("copyRustLibrary") {
+    description = "Copy the Rust library to the resource directory (Auto detected by the current platform)"
+    group = "build"
+
+    rustTargetDir.set(project.file("rust/target"))
+    resourcesDir.set(project.file("src/main/resources"))
+
+    val current = org.gradle.internal.os.OperatingSystem.current()
+    currentOs.set(when {
+        current.isWindows -> "windows"
+        current.isLinux -> "linux"
+        current.isMacOsX -> "mac"
+        else -> "unknown"
+    })
+    currentArch.set(System.getProperty("os.arch"))
+    dependsOn("patchPluginXml", "buildRust")
+}
+
+tasks.named("processResources") {
+    dependsOn("copyRustLibrary")
+}
+
 intellijPlatformTesting {
     runIde {
         register("runIdeForUiTests") {

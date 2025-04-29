@@ -1,5 +1,10 @@
 [tools]
 java = "zulu-21"
+rust = "latest"
+
+[tasks."rust:build"]
+run = "cargo build"
+dir = "rust"
 
 [tasks.run-ide]
 run = "./gradlew runIde"
