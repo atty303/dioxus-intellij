@@ -163,20 +163,21 @@ val targetMapping = mapOf(
     "aarch64-apple-darwin" to ("darwin-aarch64" to "libdioxus.dylib"),
 )
 
-val currentOs = org.gradle.internal.os.OperatingSystem.current().familyName
-val currentArch = System.getProperty("os.arch")
-val targetKey = Utils.guessTargetFromPlatform(currentOs, currentArch)
-
-val (targetFolder, targetFileName) = targetMapping[targetKey]
-    ?: throw GradleException("Target platform is not supported: $targetKey")
-
-val sourcePath = "rust/target/$targetKey/release/$targetFileName"
-val destPath = "src/main/resources/$targetFolder/$targetFileName"
-
 tasks.register("copyRustLibrary") {
     group = "build"
     description = "Copy Rust library to the appropriate resources directory"
     dependsOn("patchPluginXml", "buildRust")
+
+    val currentOs = org.gradle.internal.os.OperatingSystem.current().familyName
+    val currentArch = System.getProperty("os.arch")
+
+    val targetKey = Utils.guessTargetFromPlatform(currentOs, currentArch)
+
+    val (targetFolder, targetFileName) = targetMapping[targetKey]
+        ?: throw GradleException("Target platform is not supported: $targetKey")
+
+    val sourcePath = project.layout.projectDirectory.file("rust/target/$targetKey/release/$targetFileName")
+    val destPath = project.layout.projectDirectory.file("src/main/resources/$targetFolder/$targetFileName")
 
     inputs.file(sourcePath)
     outputs.file(destPath)
@@ -214,11 +215,8 @@ tasks.register("copyRustLibrary") {
         }
         println("--- End Debug Task ---")
 
-        val source = File(sourcePath)
-        val dest = File(destPath)
-
-        dest.parentFile.mkdirs()
-        source.copyTo(dest, overwrite = true)
+        destPath.asFile.parentFile.mkdirs()
+        sourcePath.asFile.copyTo(destPath.asFile, overwrite = true)
     }
 }
 
