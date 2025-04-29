@@ -151,62 +151,46 @@ tasks.register<BuildRustTask>("buildRust") {
     target.set(Utils.guessTargetFromPlatform(org.gradle.internal.os.OperatingSystem.current().familyName, System.getProperty("os.arch")))
 }
 
-abstract class CopyRustLibrariesTask : DefaultTask() {
-    @get:InputDirectory
-    abstract val rustTargetDir: DirectoryProperty
+val targetMapping = mapOf(
+    "x86_64-pc-windows-msvc" to ("win32-x86-64" to "dioxus.dll"),
+    "x86_64-pc-windows-gnu" to ("win32-x86-64" to "dioxus.dll"),
+    "aarch64-pc-windows-msvc" to ("win32-aarch64" to "dioxus.dll"),
+    "aarch64-pc-windows-gnu" to ("win32-aarch64" to "dioxus.dll"),
+    "x86_64-unknown-linux-gnu" to ("linux-x86-64" to "libdioxus.so"),
+    "aarch64-unknown-linux-gnu" to ("linux-aarch64" to "libdioxus.so"),
+    "x86_64-apple-darwin" to ("darwin-x86-64" to "libdioxus.dylib"),
+    "aarch64-apple-darwin" to ("darwin-aarch64" to "libdioxus.dylib"),
+)
 
-    @get:OutputDirectory
-    abstract val resourcesDir: DirectoryProperty
+val currentOs = org.gradle.internal.os.OperatingSystem.current().familyName
+val currentArch = System.getProperty("os.arch")
+val targetKey = Utils.guessTargetFromPlatform(currentOs, currentArch)
 
-    @get:Input
-    abstract val currentOs: Property<String>
+val (targetFolder, targetFileName) = targetMapping[targetKey]
+    ?: throw GradleException("Target platform is not supported: $targetKey")
 
-    @get:Input
-    abstract val currentArch: Property<String>
+val sourcePath = "rust/target/$targetKey/release/$targetFileName"
+val destPath = "src/main/resources/$targetFolder/$targetFileName"
 
-    @TaskAction
-    fun copyLibraries() {
-        val fileOps = services.get(FileSystemOperations::class.java)
-
-        val targetMapping = mapOf(
-            "x86_64-pc-windows-msvc" to ("win32-x86-64" to "dioxus.dll"),
-            "x86_64-pc-windows-gnu" to ("win32-x86-64" to "dioxus.dll"),
-            "aarch64-pc-windows-msvc" to ("win32-aarch64" to "dioxus.dll"),
-            "aarch64-pc-windows-gnu" to ("win32-aarch64" to "dioxus.dll"),
-            "x86_64-unknown-linux-gnu" to ("linux-x86-64" to "libdioxus.so"),
-            "aarch64-unknown-linux-gnu" to ("linux-aarch64" to "libdioxus.so"),
-            "x86_64-apple-darwin" to ("darwin-x86-64" to "libdioxus.dylib"),
-            "aarch64-apple-darwin" to ("darwin-aarch64" to "libdioxus.dylib"),
-        )
-
-        val targetKey = Utils.guessTargetFromPlatform(currentOs.get(), currentArch.get())
-
-        val resourceDir = targetMapping[targetKey]
-            ?: throw GradleException("Target platform is not supported: $targetKey")
-
-        val resourceDirFolder = resourcesDir.dir(resourceDir.first).get().asFile
-        resourceDirFolder.mkdirs()
-
-        val sourceFile = rustTargetDir.dir(targetKey).get().asFile.resolve(resourceDir.second)
-
-        fileOps.copy {
-            from(sourceFile)
-            into(resourceDirFolder)
-        }
-    }
-}
-
-tasks.register<CopyRustLibrariesTask>("copyRustLibrary") {
-    description = "Copy the Rust library to the resource directory (Auto detected by the current platform)"
+tasks.register("copyRustLibrary") {
     group = "build"
-
-    rustTargetDir.set(project.file("rust/target"))
-    resourcesDir.set(project.file("src/main/resources"))
-
-    currentOs.set(org.gradle.internal.os.OperatingSystem.current().familyName)
-    currentArch.set(System.getProperty("os.arch"))
-
+    description = "Copy Rust library to the appropriate resources directory"
     dependsOn("patchPluginXml", "buildRust")
+
+    inputs.file(sourcePath)
+    outputs.file(destPath)
+
+    doLast {
+        val source = File(sourcePath)
+        val dest = File(destPath)
+
+        if (!source.exists()) {
+            throw GradleException("Not found: $source")
+        }
+
+        dest.parentFile.mkdirs()
+        source.copyTo(dest, overwrite = true)
+    }
 }
 
 tasks.named("processResources") {
