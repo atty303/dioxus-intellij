@@ -1,7 +1,8 @@
-<!-- Plugin description -->
 # Dioxus JetBrains IDEs Plugin
 
 ![Dioxus Splash](https://github.com/DioxusLabs/dioxus/raw/main/notes/dioxus_splash_8.avif)
+
+<!-- Plugin description -->
 
 This plugin wraps functionality in Dioxus CLI to be used in your JetBrains IDEs!
 
@@ -15,4 +16,5 @@ This overview provides a brief introduction to Dioxus. For a more in-depth guide
 
 - [Getting Started](https://dioxuslabs.com/learn/0.5/getting_started)
 - [Book (0.5)](https://dioxuslabs.com/learn/0.5)
+
 <!-- Plugin description end -->
