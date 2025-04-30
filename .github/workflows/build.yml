@@ -76,7 +76,7 @@ jobs:
           find rust/target
 
       - name: Test
-        run: mise run test
+        run: mise run test --info
 
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@v5
@@ -98,6 +98,15 @@ jobs:
     steps:
       - uses: Kesin11/actions-timeline@v2
       - uses: actions/checkout@v4
+
+      - name: Gradle cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-gradle-
 
       - name: Download artifacts
         uses: actions/download-artifact@v4
