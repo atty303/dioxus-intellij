@@ -16,7 +16,6 @@ jobs:
       release_created: ${{ steps.release-please.outputs.release_created }}
       tag_name: ${{ steps.release-please.outputs.tag_name }}
     steps:
-      - uses: Kesin11/actions-timeline@v2
       - uses: actions/create-github-app-token@v1
         id: app-token
         with:
@@ -51,7 +50,6 @@ jobs:
             name: libdioxus.dylib
     runs-on: ${{ matrix.runner }}
     steps:
-      - uses: Kesin11/actions-timeline@v2
       - uses: actions/checkout@v4
       - uses: jdx/mise-action@v2
 
@@ -99,7 +97,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-rust
     steps:
-      - uses: Kesin11/actions-timeline@v2
       - uses: actions/checkout@v4
 
       - name: Gradle cache
@@ -165,7 +162,6 @@ jobs:
     needs: [ build-plugin, release-please ]
     if: ${{ needs.release-please.outputs.release_created }}
     steps:
-      - uses: Kesin11/actions-timeline@v2
       - uses: actions/checkout@v4
 
       - name: Download artifacts
@@ -196,3 +192,10 @@ jobs:
         env:
           PUBLISH_TOKEN: ${{ secrets.MARKETPLACE_PUBLISH_TOKEN }}
         run: ./gradlew publishPlugin
+
+  timeline:
+    runs-on: ubuntu-latest
+    needs: [ release-please, build-plugin, publish ]
+    if: always()
+    steps:
+      - uses: Kesin11/actions-timeline@v2
