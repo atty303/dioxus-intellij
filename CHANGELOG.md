@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.4.0](https://github.com/atty303/dioxus-intellij/compare/v1.3.1...v1.4.0) (2025-04-30)
+
+
+### Features
+
+* updated to 2025.1 and fix linux support ([98f490d](https://github.com/atty303/dioxus-intellij/commit/98f490d2c80af867307e2cd6429c0443eb833089))
+* updated to 2025.1 and fix linux support ([3b35121](https://github.com/atty303/dioxus-intellij/commit/3b351210ce1282852a88a2657c46ef2220f5ee76))
+
+
+### Bug Fixes
+
+* copy ([91b1b87](https://github.com/atty303/dioxus-intellij/commit/91b1b877c2f367b45bc2b4e0e03a0161df60a697))
+* update devcontainer.json to enable SSH access in Codespaces ([ba2de25](https://github.com/atty303/dioxus-intellij/commit/ba2de258ffbba3cd3eeef19bdcec6adb977dfcbc))
+
 ## [Unreleased]
 
 ## [1.3.1](https://github.com/atty303/dioxus-intellij/compare/v1.3.0...v1.3.1) (2025-01-24)
