@@ -88,6 +88,9 @@ jobs:
           report_paths: "**/build/test-results/*/TEST-*.xml"
           check_name: "Test report [${{ matrix.target }}]"
 
+      - name: Stop gradle daemon
+        run: ./gradlew --stop
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
@@ -100,6 +103,7 @@ jobs:
     needs: build-rust
     steps:
       - uses: actions/checkout@v4
+      - uses: jdx/mise-action@v2
 
       - name: Gradle cache
         uses: actions/cache@v4
@@ -135,13 +139,6 @@ jobs:
 
           find src/main/resources
 
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: "temurin"
-          java-version: "21"
-          cache: gradle
-
       - name: Build plugin
         run: ./gradlew buildPlugin
 
@@ -151,6 +148,9 @@ jobs:
           PRIVATE_KEY: ${{ secrets.SIGNING_PRIVATE_KEY }}
           PRIVATE_KEY_PASSWORD: ${{ secrets.SIGNING_PRIVATE_KEY_PASSWORD }}
         run: ./gradlew signPlugin
+
+      - name: Stop gradle daemon
+        run: ./gradlew --stop
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -165,6 +165,16 @@ jobs:
     if: ${{ needs.release-please.outputs.release_created }}
     steps:
       - uses: actions/checkout@v4
+      - uses: jdx/mise-action@v2
+
+      - name: Gradle cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-gradle-
 
       - name: Download artifacts
         uses: actions/download-artifact@v4
@@ -183,17 +193,13 @@ jobs:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
         run: gh release upload ${{ needs.release-please.outputs.tag_name }} build/distributions/dioxus-*-signed.zip
 
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: "temurin"
-          java-version: "21"
-          cache: gradle
-
       - name: Upload to Marketplace
         env:
           PUBLISH_TOKEN: ${{ secrets.MARKETPLACE_PUBLISH_TOKEN }}
         run: ./gradlew publishPlugin
+
+      - name: Stop gradle daemon
+        run: ./gradlew --stop
 
   timeline:
     runs-on: ubuntu-latest
