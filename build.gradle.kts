@@ -216,6 +216,15 @@ intellijPlatformTesting {
     }
 }
 
+tasks.withType<Test>().configureEach {
+    jvmArgumentProviders += CommandLineArgumentProvider {
+        listOf(
+            "-Djna.debug_load=true",
+            "-Djna.debug_load.jna=true",
+        )
+    }
+}
+
 object Utils {
     fun guessTargetFromPlatform(osName: String, archName: String): String =
         when {
