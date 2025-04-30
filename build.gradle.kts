@@ -192,10 +192,7 @@ tasks.register("copyRustLibrary") {
     }
 }
 
-tasks.named("processResources") {
-    onlyIf {
-        !gradle.startParameter.taskNames.any { it.contains("buildPlugin") || it.contains("signPlugin") || it.contains("publishPlugin") }
-    }
+tasks.matching { !(it.name == "buildPlugin" || it.name == "signPlugin" || it.name == "publishPlugin") && it.name == "processResources" }.configureEach {
     dependsOn("copyRustLibrary")
 }
 
