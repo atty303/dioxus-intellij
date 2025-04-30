@@ -49,6 +49,9 @@ jobs:
             runner: macos-15
             name: libdioxus.dylib
     runs-on: ${{ matrix.runner }}
+    defaults:
+      run:
+        shell: bash
     steps:
       - uses: actions/checkout@v4
       - uses: jdx/mise-action@v2
@@ -68,16 +71,15 @@ jobs:
           restore-keys: ${{ runner.os }}-gradle-
 
       - name: Build
-        shell: bash
         run: mise run rust:build --target ${{ matrix.target }} --release
 
       - name: Test
-        shell: bash
+        run: mise run test --info
+
+      - name: Show idea.log
+        if: success() || failure()
         run: |
-          mise run test --info
-          echo "::group::idea.log"
           find build/idea-sandbox -type f -name "idea.log" -exec cat {} +
-          echo "::end-group::"
 
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@v5
